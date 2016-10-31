@@ -1,5 +1,6 @@
 package alexjalg.compras.de.lista.app.com.applistadecompras.fragments;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,13 +20,7 @@ public class ListaFragment extends Fragment {
     RecyclerView recyclerView;
     ListaAdapter adapter;
     private static final String TAG = "RecyclerViewFragment";
-    String[] data = new String[]{
-            "Elemento1","Elemento2","Elemento3","Elemento4",
-            "Elemento1","Elemento2","Elemento3","Elemento4",
-            "Elemento1","Elemento2","Elemento3","Elemento4",
-            "Elemento1","Elemento2","Elemento3","Elemento4",
-            "Elemento1","Elemento2","Elemento3","Elemento4",
-            "Elemento1","Elemento2","Elemento3","Elemento4"};
+
     public View onCreateView(
             LayoutInflater inflater,
             ViewGroup container,
@@ -34,7 +29,8 @@ public class ListaFragment extends Fragment {
         rootView.setTag(TAG);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.lista);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        adapter = new ListaAdapter(data);
+        Cursor cursor = new Cursor();
+        adapter = new ListaAdapter(getActivity().getApplicationContext(), cursor);
         recyclerView.setAdapter(adapter);
         return rootView;
     }

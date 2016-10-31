@@ -1,9 +1,12 @@
 package alexjalg.compras.de.lista.app.com.applistadecompras.adapters;
 
+import android.content.Context;
+import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 import alexjalg.compras.de.lista.app.com.applistadecompras.R;
@@ -14,14 +17,27 @@ import alexjalg.compras.de.lista.app.com.applistadecompras.R;
 
 public class ListaAdapter extends RecyclerView.Adapter<ListaAdapter.ViewHolder>{
 
-    private String[] myData;
+    Context context;
+    CursorAdapter cursorAdapter;
 
-    public ListaAdapter(String[] myData){
-        this.myData = myData;
-        if (this.myData == null){
-            this.myData = new String[]{"EStaba nulo"};
-        }
+    public ListaAdapter(Context context, Cursor cursor){
+        this.context = context;
+        this.cursorAdapter = new CursorAdapter(context, cursor, 0) {
+            @Override
+            public View newView(Context context, Cursor cursor, ViewGroup parent) {
+                LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+                View view = inflater.inflate(R.layout.item , parent , false);
+                return view;
+            }
 
+            @Override
+            public void bindView(View view, Context context, Cursor cursor) {
+                TextView titulo = (TextView) view.findViewById(R.id.titulo);
+                TextView listanombre = (TextView) view.findViewById(R.id.listanombre);
+                titulo.setText(cursor.getColumnIndex(cursor.getColumnName(1)));
+                listanombre.setText(cursor.getColumnIndex(cursor.getColumnName(2)));
+            }
+        };
     }
 
     @Override
@@ -34,13 +50,13 @@ public class ListaAdapter extends RecyclerView.Adapter<ListaAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.titulo.setText(myData[position]);
+        //holder.titulo.setText(myData[position]);
+        cursorAdapter.getCursor().moveToPosition(position);
+        cursorAdapter.bindView(holder.itemView, context, cursorAdapter.getCursor());
     }
 
     @Override
-    public int getItemCount() {
-        return myData.length;
-    }
+    public int getItemCount() { return  cursorAdapter.getCount(); }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
         public TextView titulo;
